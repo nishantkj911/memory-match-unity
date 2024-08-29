@@ -257,31 +257,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1127686563695675955}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5145325520752265921}
-        m_TargetAssemblyTypeName: CardFlipper, Assembly-CSharp
-        m_MethodName: FlipCard
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
-        m_MethodName: PopulateFlippedCards
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &5145325520752265921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c2569282c0be640ab704727f3399a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  card: {fileID: 0}
+  card: {fileID: 11400000, guid: 497f83a4db96d47419b52e581a256384, type: 2}
   cardText: {fileID: 3168610145080876156}
 --- !u!1 &4228237428718865404
 GameObject:

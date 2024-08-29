@@ -3,35 +3,47 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
+using UnityEngine.Video;
 using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private GameObject grid;
+    public event EventHandler OnBothCardsFlipped = delegate { };
+    public event EventHandler OnMoveEnd = delegate { };
+    public event EventHandler OnGameOver = delegate { };
+
+        [SerializeField] private GameObject grid;
     [SerializeField] private Card[] allCards;
     [SerializeField] private GameObject cardPrefab;
+    
+
+    public int MoveCount { get; private set; }              // Making this public since in UI it's required.
+    [FormerlySerializedAs("CardCount")] public int cardCount = 16;
 
     private const int MaxFlippedCards = 2;
+    private List<GameObject> _currentFlippedCards;
+    private int _flippedCardsCount;
+    private bool _gameOver = false;
 
-    private List<GameObject> flippedCards;
-    private event EventHandler OnBothCardsFlipped = delegate { };
-
+    // Custom written functions
     public void PopulateFlippedCards(GameObject card)
     {
-        if (flippedCards.Count == MaxFlippedCards)
+        if (_currentFlippedCards.Count == MaxFlippedCards)
         {
             throw new Exception("Too many flipped cards");
         }
 
-        flippedCards.Add(card);
+        _currentFlippedCards.Add(card);
 
-        if (flippedCards.Count == MaxFlippedCards)
+        if (_currentFlippedCards.Count == MaxFlippedCards)
         {
             OnBothCardsFlipped?.Invoke(this, EventArgs.Empty);
         }
     }
 
-    private static void Shuffle<T>(List<T> ts)
+    private static void Shuffle<T>(List<T> ts)      // TODO: Maybe revisit this shuffle algorithm???
     {
         var count = ts.Count;
         var last = count - 1;
@@ -62,52 +74,86 @@ public class GameController : MonoBehaviour
         return cards;
     }
 
-    private void Start()
+    private void CheckForSimilarity(object sender, EventArgs e)
     {
-        // Keeping this permanent because there's always gonna be test cards in the hierarchy
+        var card0 = _currentFlippedCards[0].GetComponent<CardBehaviour>().card;
+        var card1 = _currentFlippedCards[1].GetComponent<CardBehaviour>().card;
+
+        if (card0.fruit == card1.fruit)
+        {
+            // Update the completed card count
+            _flippedCardsCount += 2;
+            _currentFlippedCards.Clear();
+        }
+        else
+        {
+            StartCoroutine(FlipBackCards());
+        }
+        
+        OnMoveEnd?.Invoke(this, EventArgs.Empty);
+
+        return;
+
+        // local functions are to be defined after return statement (as a good practice)
+        IEnumerator FlipBackCards()
+        {
+            yield return new WaitForSeconds(0.5f);
+            _currentFlippedCards[0].GetComponent<CardFlipper>().FlipCard();
+            _currentFlippedCards[1].GetComponent<CardFlipper>().FlipCard();
+            
+            _currentFlippedCards.Clear();
+        }
+    }
+
+    private void MoveCountUpdate(object o, EventArgs e)
+    {
+        MoveCount++;
+        // Debug.Log(MoveCount);
+    }
+
+    private void EndGame(object sender, EventArgs e)
+    {
+        Debug.Log("Game Over!!");
+        Debug.Log($"It took {MoveCount} moves");
+    }
+    
+    // Unity functions
+    private void Awake()
+    {
+        // Keeping this permanent because there's always going to be test cards in the hierarchy
         var gridChildren = grid.GetComponentsInChildren<CardBehaviour>();
         foreach (var child in gridChildren)
         {
             Destroy(child.gameObject);
         }
+    }
 
-        // Proper code starts here
-        var cards = MakeAllCards(16);
+    private void Start()
+    {
+        var cards = MakeAllCards(cardCount);
         foreach (var card in cards)
         {
             cardPrefab.GetComponent<CardBehaviour>().card = card;
             Instantiate(cardPrefab, grid.transform);
         }
 
-        flippedCards = new List<GameObject>(MaxFlippedCards);
+        _currentFlippedCards = new List<GameObject>(MaxFlippedCards);
         OnBothCardsFlipped += CheckForSimilarity;
+        OnMoveEnd += MoveCountUpdate;
+        OnGameOver += EndGame;
     }
 
-    private void CheckForSimilarity(object sender, EventArgs e)
+    private void Update()
     {
-        var card0 = flippedCards[0].GetComponent<CardBehaviour>().card;
-        var card1 = flippedCards[1].GetComponent<CardBehaviour>().card;
-
-        if (card0.fruit == card1.fruit)
+        if (!_gameOver && _flippedCardsCount == cardCount)
         {
-            // Do nothing. keep them flipped
-            flippedCards.Clear();
-        }
-        else
-        {
-            StartCoroutine(FlipBackCards());
+            _gameOver = true;
+            OnGameOver.Invoke(this, EventArgs.Empty);
         }
 
-        return;
-
-        // local functions are to be defined after return statement
-        IEnumerator FlipBackCards()
+        if (_gameOver && (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Space)))
         {
-            yield return new WaitForSeconds(0.5f);
-            flippedCards[0].GetComponent<CardFlipper>().FlipCard();
-            flippedCards[1].GetComponent<CardFlipper>().FlipCard();
-            
-            flippedCards.Clear();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }

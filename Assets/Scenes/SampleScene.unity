@@ -990,13 +990,37 @@ PrefabInstance:
     m_TransformParent: {fileID: 235029815}
     m_Modifications:
     - target: {fileID: 2411540857191356423, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411540857191356423, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1866659191}
+    - target: {fileID: 2411540857191356423, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1866659191}
     - target: {fileID: 2411540857191356423, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PopulateFlippedCards
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411540857191356423, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2411540857191356423, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1866659189}
+    - target: {fileID: 2411540857191356423, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 1866659189}
+    - target: {fileID: 2411540857191356423, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3374453601597851742, guid: 817c883f330546545ade9a6d09818a4f, type: 3}
       propertyPath: m_Name
       value: Card
